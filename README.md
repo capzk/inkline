@@ -511,6 +511,7 @@ inkline/
 │       └── main.js           # 入口
 ├── layouts/
 │   ├── _default/
+│   │   ├── baseof.html       # 基础模板（含 head 注入块与代码复制 JS）
 │   │   ├── list.html         # 列表页（分类/标签/文章归档）
 │   │   ├── search.html       # 搜索页
 │   │   ├── single.html       # 文章详情页
@@ -529,7 +530,6 @@ inkline/
 │   ├── 404.html              # 404 页面
 │   ├── index.searchindex.json # 搜索索引模板（输出 /searchindex.json）
 │   ├── robots.txt            # robots.txt 模板（含 sitemap 地址）
-│   ├── baseof.html           # 基础模板（含 head 注入块与代码复制 JS）
 │   └── index.html            # 首页
 ├── static/
 │   ├── favicon.svg
@@ -538,6 +538,7 @@ inkline/
 ├── images/                   # 主题展示图：screenshot.png 1500×1000 + tn.png 900×600
 ├── theme.toml                # 主题元信息（名称/许可/标签/最低版本）
 ├── module.toml               # Hugo Modules 版本门槛声明
+├── .gitattributes            # 统一换行符
 ├── .gitignore
 ├── LICENSE
 └── README.md
