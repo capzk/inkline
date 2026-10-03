@@ -1,0 +1,80 @@
+# Inkline 主题示例站点配置（exampleSite）
+# 直接 `hugo server --source exampleSite --themesDir ../..` 即可预览整套主题效果。
+baseURL = 'https://example.org/'
+locale = 'zh-CN'
+title = '引线'
+theme = 'inkline'
+hasCJKLanguage = true
+enableEmoji = true
+enableRobotsTXT = true
+
+# 分页：每页 9 篇（Hugo 0.128+ 起改用 [pagination].pagerSize）
+[pagination]
+  pagerSize = 9
+
+# 内容分类法
+[taxonomies]
+  category = 'categories'
+  tag = 'tags'
+
+# 站内搜索：Hugo 构建期生成 /searchindex.json，前端零依赖检索，无需 npm 或第三方服务
+[outputs]
+  home = ['HTML', 'RSS', 'SearchIndex']
+
+[outputFormats.SearchIndex]
+  mediaType = 'application/json'
+  baseName = 'searchindex'
+  isPlainText = true
+  notAlternative = true
+
+# URL 自定义：文章固定为 /posts/:slug/，可用 front matter 的 slug / url / aliases 覆盖
+[permalinks]
+  posts = '/posts/:slug/'
+
+# 最低 Hugo 版本保护：版本过低时构建日志会给出明确警告，而不是晦涩的模板报错。
+# 以子模块 / 复制方式安装主题时，Hugo 不读取主题自带的 module.toml，必须在站点侧声明一次。
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = '0.158.0'
+
+[params]
+  description = '现代杂志风格博客，专注设计与工程的交叉地带。'
+  announcement = '欢迎使用 Inkline 主题，这是一条示例公告。'
+  announcement_link = '#'
+  homeGridCount = 6
+
+  [params.brand]
+    name = '引线'
+
+  [params.accent]
+    primary = '#0f7a5a'   # 改这里即可换全站强调色
+
+  [params.author]
+    name = '引线编辑部'
+    bio = '一群喜欢把复杂事情讲清楚的人。'
+
+  [params.social]
+    github = 'https://github.com/'
+    x = 'https://x.com/'
+    email = 'mailto:hi@example.org'
+    weibo = ''
+
+  [params.seo]
+    robots = 'index,follow'
+    title_suffix = ' · 引线'
+    twitter_site = '@yinxian'
+    og_image = '/images/og-default.png'
+    google_analytics = ''
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      footnotes = true
+      definitionList = true
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = true
+    codeFences = true
+    lineNos = false

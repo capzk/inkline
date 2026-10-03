@@ -1,0 +1,95 @@
+{{ define "main" }}
+{{ $cats := .GetTerms "categories" }}
+{{ $catName := "科技" }}{{ with $cats }}{{ $catName = (index . 0).LinkTitle }}{{ end }}
+{{ $gradient := partial "cover-gradient.html" $catName }}
+{{/* 文章未写 author 时回退到站点级作者，避免作者卡片整块消失 */}}
+{{ $author := .Params.author | default .Site.Params.author.name }}
+{{ $bio := .Params.author_bio | default .Site.Params.author.bio }}
+
+<div class="article-wrap">
+  <nav class="crumb" aria-label="面包屑">
+    <a href="{{ "/" | relURL }}">首页</a>
+    {{ range $cats }}<span class="sep" aria-hidden="true">/</span><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+    <span class="sep" aria-hidden="true">/</span><span class="cur">{{ .Title }}</span>
+  </nav>
+
+  <article class="post">
+    <div class="post-accent" style="{{ printf "background:%s" $gradient | safeCSS }}" aria-hidden="true"></div>
+
+{{/* 关于 / 订阅这类页面没有日期，不写死会渲染出 0001 年 1 月 1 日 */}}
+{{ $dated := not .Date.IsZero }}
+    <header class="post-head">
+      <div class="eyebrow">
+        {{ range $cats }}<a class="chip" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+        {{ if $dated }}<time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006 年 1 月 2 日" }}</time>{{ end }}
+        {{ if or $cats $dated }}<span class="dot" aria-hidden="true"></span>{{ end }}
+        <span>阅读 {{ .ReadingTime }} 分钟</span>
+        <span class="dot" aria-hidden="true"></span>
+        <span>约 {{ .WordCount }} 字</span>
+      </div>
+
+      <h1>{{ .Title }}</h1>
+    </header>
+
+    <div class="post-body">
+      {{ .Content }}
+
+      {{ with .GetTerms "tags" }}
+      <div class="tags">
+        <span class="tags-label">标签</span>
+        {{ range . }}<a href="{{ .RelPermalink }}">#{{ .LinkTitle }}</a>{{ end }}
+      </div>
+      {{ end }}
+
+      {{ with $author }}
+      <div class="license">
+        <span class="lt">版权声明</span>
+        <p>本文作者 <b>{{ . }}</b>，首发于「{{ $.Site.Title }}」。本站原创内容采用 <b>知识共享 署名-非商业性使用 4.0 (CC BY-NC 4.0)</b> 协议。转载须保留作者、原文链接与本声明。</p>
+      </div>
+
+      <div class="author-card">
+        <span class="ava" aria-hidden="true"></span>
+        <div class="who">
+          <div class="name">{{ . }}</div>
+          <div class="bio">{{ $bio | default (printf "%s 的主笔" .) }}</div>
+        </div>
+        <a href="{{ "/about/" | relURL }}">关于作者</a>
+      </div>
+      {{ end }}
+
+      {{/* 相关阅读：优先同分类，不足再按同栏目补齐 */}}
+      {{ $pool := where .Site.RegularPages "Section" .Section }}
+      {{ $pool = where $pool "RelPermalink" "!=" .RelPermalink }}
+      {{ $sameCat := where $pool "Params.categories" "intersect" (slice $catName) }}
+      {{ $related := first 2 (union $sameCat (complement $sameCat $pool)) }}
+      {{ with $related }}
+      <section class="related">
+        <h4>相关阅读</h4>
+        <div class="rgrid">
+          {{ range . }}
+            {{ $rc := "科技" }}{{ with .GetTerms "categories" }}{{ $rc = (index . 0).LinkTitle }}{{ end }}
+            <a href="{{ .RelPermalink }}">
+              <span class="rcat">{{ $rc }} · {{ .ReadingTime }} min</span>
+              <span class="rtitle">{{ .Title }}</span>
+            </a>
+          {{ end }}
+        </div>
+      </section>
+      {{ end }}
+
+      {{ if or .PrevInSection .NextInSection }}
+      <nav class="post-nav" aria-label="上下篇导航">
+        {{ with .PrevInSection }}
+        <a class="pn" href="{{ .RelPermalink }}"><span class="pl">← 上一篇</span><span class="pt">{{ .Title }}</span></a>
+        {{ end }}
+        {{ with .NextInSection }}
+        <a class="pn pn-r" href="{{ .RelPermalink }}"><span class="pl">下一篇 →</span><span class="pt">{{ .Title }}</span></a>
+        {{ end }}
+      </nav>
+      {{ end }}
+
+      <div class="back-row"><a class="back" href="{{ "/" | relURL }}">← 返回首页</a></div>
+    </div>
+  </article>
+</div>
+{{ end }}

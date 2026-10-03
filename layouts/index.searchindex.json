@@ -1,0 +1,31 @@
+{{- /*
+  站内搜索索引（/searchindex.json）
+  由 Hugo 构建期生成，前端直接抓取做检索，不需要 npm、CDN 或任何第三方搜索服务。
+
+  字段刻意用单字母压缩体积：
+    t = 标题   u = 相对链接（含子路径部署）  d = 日期
+    c = 分类   g = 标签                    x = 正文纯文本
+  分类/标签用 .GetTerms 取，因为 urlize 处理中文会生成与分类页不匹配的 slug。
+  不想被搜索到的页面在 front matter 里加 searchExclude: true 即可。
+*/ -}}
+{{- $index := slice -}}
+{{- range .Site.RegularPages -}}
+  {{- if not .Params.searchExclude -}}
+    {{- $date := "" -}}
+    {{- if not .Date.IsZero }}{{ $date = .Date.Format "2006-01-02" }}{{ end -}}
+    {{- $cats := slice -}}
+    {{- with .GetTerms "categories" }}{{ range . }}{{ $cats = $cats | append .LinkTitle }}{{ end }}{{ end -}}
+    {{- $tags := slice -}}
+    {{- with .GetTerms "tags" }}{{ range . }}{{ $tags = $tags | append .LinkTitle }}{{ end }}{{ end -}}
+    {{- $body := .Plain | htmlUnescape | replaceRE `\s+` " " -}}
+    {{- $index = $index | append (dict
+        "t" .Title
+        "u" .RelPermalink
+        "d" $date
+        "c" (delimit $cats " ")
+        "g" (delimit $tags " ")
+        "x" $body
+      ) -}}
+  {{- end -}}
+{{- end -}}
+{{- $index | jsonify -}}

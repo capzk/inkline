@@ -1,0 +1,5 @@
+{{ if .IsHome -}}
+  {{ .Site.Title }}
+{{- else -}}
+  {{ .Title }}{{ with .Site.Params.seo.title_suffix }}{{ . }}{{ else }} · {{ .Site.Title }}{{ end }}
+{{- end }}

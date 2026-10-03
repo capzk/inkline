@@ -1,0 +1,17 @@
+{{ if gt .Paginator.TotalPages 1 }}
+<nav class="pagination">
+  {{ if .Paginator.HasPrev }}
+    <a href="{{ .Paginator.Prev.URL }}" aria-label="上一页">‹</a>
+  {{ end }}
+  {{ range .Paginator.Pagers }}
+    {{ if eq . $ }}
+      <span class="active">{{ .PageNumber }}</span>
+    {{ else }}
+      <a href="{{ .URL }}">{{ .PageNumber }}</a>
+    {{ end }}
+  {{ end }}
+  {{ if .Paginator.HasNext }}
+    <a href="{{ .Paginator.Next.URL }}" aria-label="下一页">›</a>
+  {{ end }}
+</nav>
+{{ end }}

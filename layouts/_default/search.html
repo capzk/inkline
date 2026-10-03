@@ -1,0 +1,50 @@
+{{ define "main" }}
+{{/* 索引用自定义输出格式产出，这里取它的真实地址，兼容部署在子路径的情况 */}}
+{{ $index := "" }}
+{{ with .Site.Home.OutputFormats.Get "SearchIndex" }}{{ $index = .RelPermalink }}{{ end }}
+
+<div class="search-page" data-search data-search-index="{{ $index }}">
+  <header class="sp-head">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.description }}<p>{{ . }}</p>{{ end }}
+  </header>
+
+  <form class="sbox" role="search" action="{{ .RelPermalink }}" method="get">
+    <span class="sic" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path></svg>
+    </span>
+    <input class="sinput" type="search" name="q" data-search-input autocomplete="off" spellcheck="false"
+      placeholder="输入关键词，中英文都可以" aria-label="搜索关键词" aria-describedby="search-status">
+    <button class="sclear" type="button" data-search-clear hidden aria-label="清空关键词">&times;</button>
+  </form>
+
+  <p class="sstat" id="search-status" data-search-status role="status" aria-live="polite"></p>
+
+  <div class="sres" data-search-results hidden></div>
+
+  <div class="shint" data-search-hint>
+    <b>输入关键词开始检索</b>
+    <span>中文按词匹配，不必逐字精确；英文忽略大小写，支持前缀。</span>
+    <span>按 <kbd class="skbd">/</kbd> 或 <kbd class="skbd">Ctrl</kbd>+<kbd class="skbd">K</kbd> 聚焦输入框，<kbd class="skbd">↓</kbd> 切换结果。</span>
+  </div>
+
+  <div class="sempty" data-search-empty hidden>
+    <b data-search-title>没有找到相关内容</b>
+    <span data-search-message>换个说法、少用几个字，或只保留关键词再试一次。</span>
+    <span class="sterm" data-search-term></span>
+  </div>
+
+  <noscript>
+    <div class="sempty">
+      <b>需要开启 JavaScript</b>
+      <span>全文检索在浏览器本地完成，检索词不会发送到任何服务器。</span>
+    </div>
+  </noscript>
+</div>
+{{ end }}
+
+{{ define "head" }}
+{{/* 检索脚本只在搜索页加载，其他页面零额外开销 */}}
+{{ $js := resources.Get "js/search/main.js" | js.Build (dict "minify" true "target" "es2019" "targetPath" "js/search.js") }}
+{{ with $js }}{{ with . | fingerprint }}<script defer src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous"></script>{{ end }}{{ end }}
+{{ end }}

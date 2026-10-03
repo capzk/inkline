@@ -1,0 +1,47 @@
+# Inkline —— Hugo 主题元信息
+# 字段遵循 Hugo 主题规范：https://gohugo.io/themes/creating/
+#
+# min_version 说明：模板用到了 .Site.Language.Locale（v0.158.0 引入，
+# 同时 v0.158.0 起配置项 languageCode 更名为 locale），故最低要求 0.158.0。
+# 低于该版本会因找不到 Locale 字段而报出难以定位的模板错误。
+
+name = "Inkline"
+license = "MIT"
+licenselink = "https://github.com/capzk/inkline/blob/main/LICENSE"
+description = "现代杂志风格 Hugo 博客主题：杂志式首页、分类渐变封面、悬浮卡片文章页、中文友好的零依赖站内搜索，内置完整 SEO（Open Graph / Twitter Card / JSON-LD）、可配置强调色与永久链接。"
+homepage = "https://github.com/capzk/inkline"
+demosite = "https://capzk.com/"
+
+tags = ["blog", "magazine", "minimal", "clean", "responsive", "seo", "search", "chinese", "zh-cn"]
+features = [
+  "blog",
+  "magazine-layout",
+  "responsive",
+  "gradient-covers",
+  "floating-article-card",
+  "editor-picks",
+  "taxonomies",
+  "reading-time",
+  "code-copy-button",
+  "code-collapse",
+  "built-in-search",
+  "cjk-search",
+  "zero-dependency-search",
+  "seo",
+  "open-graph",
+  "twitter-card",
+  "json-ld",
+  "rss",
+  "configurable-permalinks",
+  "accent-color-override",
+  "keyboard-accessible",
+]
+min_version = "0.158.0"
+
+[author]
+  name = "capzk"
+  homepage = "https://capzk.com/"
+
+[original]
+  name = "16-modern-magazine"
+  note = "Converted from a static HTML theme demo"

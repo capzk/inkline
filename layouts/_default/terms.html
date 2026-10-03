@@ -1,0 +1,11 @@
+{{ define "main" }}
+<div class="section-h">
+  <h2>{{ if eq .Data.Singular "category" }}分类{{ else if eq .Data.Singular "tag" }}标签{{ else }}{{ .Title }}{{ end }}</h2>
+  <span>{{ len .Pages }} 个</span>
+</div>
+<div class="cats">
+  {{ range .Pages }}
+    <a href="{{ .RelPermalink }}">{{ .Title }} ({{ len .Pages }})</a>
+  {{ end }}
+</div>
+{{ end }}

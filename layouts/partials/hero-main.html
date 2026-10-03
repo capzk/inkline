@@ -1,0 +1,10 @@
+{{ $cat := "科技" }}{{ with .Params.categories }}{{ $cat = index . 0 }}{{ end }}
+<a href="{{ .RelPermalink }}" class="hero-main">
+  <div class="ov"></div>
+  <div class="body">
+    <span class="cat">{{ $cat }}</span>
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Plain | truncate 90 "…" }}</p>
+    <div class="meta">{{ .Date.Format "2006.01.02" }} · {{ .Params.author | default .Site.Params.author.name | default .Site.Title }} · {{ .ReadingTime }} min</div>
+  </div>
+</a>

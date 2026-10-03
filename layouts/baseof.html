@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="{{ .Site.Language.Locale | default "zh-CN" }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ partial "title.html" . }}</title>
+  {{ partial "seo.html" . }}
+  <link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" href="{{ "/index.xml" | absURL }}">
+  <link rel="sitemap" type="application/xml" href="{{ "/sitemap.xml" | absURL }}">
+  <link rel="icon" type="image/svg+xml" href="{{ "/favicon.svg" | relURL }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "/favicon-32x32.png" | relURL }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ "/favicon-16x16.png" | relURL }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/apple-touch-icon.png" | relURL }}">
+  <link rel="manifest" href="{{ "/site.webmanifest" | relURL }}">
+  <meta name="theme-color" content="{{ .Site.Params.accent.primary | default "#0f7a5a" }}">
+  {{ with resources.Get "css/style.css" | minify | fingerprint }}<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">{{ end }}
+  {{/* 强调色覆盖必须放在外链样式之后，否则被 style.css 的 :root 默认值覆盖而失效 */}}
+  {{ with .Site.Params.accent.primary }}<style>:root{--accent:{{ . }};--accent-dark:color-mix(in srgb,{{ . }} 76%,#000);--accent-soft:color-mix(in srgb,{{ . }} 14%,#fff);--accent-ink:color-mix(in srgb,{{ . }} 82%,#000);--accent-deep:color-mix(in srgb,{{ . }} 72%,#000);--accent-light:color-mix(in srgb,{{ . }} 62%,#fff);--accent-pale:color-mix(in srgb,{{ . }} 78%,#fff);--accent-link:color-mix(in srgb,{{ . }} 55%,#fff);--accent-av:linear-gradient(135deg,{{ . }},color-mix(in srgb,{{ . }} 55%,#fff));}</style>{{ end }}
+  {{/* 页面级按需资源（如搜索页的检索脚本），避免在其他页面加载 */}}
+  {{ block "head" . }}{{ end }}
+  {{ with .Site.Params.seo.google_analytics }}<script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ . }}');</script>{{ end }}
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+{{ partial "header.html" . }}
+<main id="main" class="wrap">
+{{ block "main" . }}{{ end }}
+</main>
+{{ partial "footer.html" . }}
+<script>
+document.querySelectorAll('article pre').forEach(function(pre){var code=pre.querySelector('code');var btn=document.createElement('button');btn.className='copy-btn';btn.textContent='复制';btn.setAttribute('aria-label','复制代码');btn.addEventListener('click',function(){var text=code?code.textContent:pre.textContent;navigator.clipboard.writeText(text).then(function(){btn.textContent='已复制';btn.classList.add('copied');setTimeout(function(){btn.textContent='复制';btn.classList.remove('copied');},2000);}).catch(function(){});});pre.appendChild(btn);if(pre.scrollHeight>320){pre.classList.add('collapsible');var ex=document.createElement('button');ex.className='expand-btn';ex.textContent='展开';ex.addEventListener('click',function(){if(pre.classList.contains('expanded')){pre.classList.remove('expanded');ex.textContent='展开';}else{pre.classList.add('expanded');ex.textContent='收起';}});pre.appendChild(ex);}});
+</script>
+</body>
+</html>

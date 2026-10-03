@@ -1,0 +1,12 @@
+# Hugo Modules 声明
+#
+# 这份文件在「用 Hugo Modules 安装」时会被真正读取并强制校验版本：
+#   hugo mod get github.com/capzk/inkline
+# 版本不满足会直接在构建时报错，而不是抛出难以定位的模板错误。
+#
+# 注意：以 git submodule / 复制目录方式放进 themes/ 安装时，Hugo 不读取本文件，
+# 这种情况请改用站点 hugo.toml 里的 [module.hugoVersion] 做版本保护。
+
+[hugoVersion]
+  extended = true
+  min = "0.158.0"

@@ -1,0 +1,17 @@
+{{ $p := .RelPermalink }}
+<header>
+  <div class="wrap head-inner">
+    <a class="brand" href="{{ "/" | relURL }}">{{ .Site.Params.brand.name | default .Site.Title }}</a>
+    <nav class="nav" aria-label="主导航"><ul>
+      <li><a href="{{ "/" | relURL }}"{{ if .IsHome }} class="active" aria-current="page"{{ end }}>首页</a></li>
+      <li><a href="{{ "/posts/" | relURL }}"{{ if hasPrefix $p "/posts" }} class="active" aria-current="page"{{ end }}>文章</a></li>
+      <li class="hide-sm"><a href="{{ "/categories/" | relURL }}"{{ if hasPrefix $p "/categories" }} class="active" aria-current="page"{{ end }}>分类</a></li>
+      <li class="hide-sm"><a href="{{ "/tags/" | relURL }}"{{ if hasPrefix $p "/tags" }} class="active" aria-current="page"{{ end }}>标签</a></li>
+      <li class="hide-sm"><a href="{{ "/about/" | relURL }}"{{ if hasPrefix $p "/about" }} class="active" aria-current="page"{{ end }}>关于</a></li>
+      <li><a class="nav-ic{{ if hasPrefix $p "/search" }} active{{ end }}" href="{{ "/search/" | relURL }}" aria-label="站内搜索" title="站内搜索（/）">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.6-3.6"></path></svg>
+      </a></li>
+      <li><a class="sub" href="{{ "/subscribe/" | relURL }}"{{ if hasPrefix $p "/subscribe" }} aria-current="page"{{ end }}>订阅</a></li>
+    </ul></nav>
+  </div>
+</header>

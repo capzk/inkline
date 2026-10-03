@@ -1,0 +1,42 @@
+{{ define "main" }}
+{{ with .Site.Params.announcement }}
+<div class="announce">
+  <span class="tag">公告</span>
+  <p>{{ . }}</p>
+  <a href="{{ $.Site.Params.announcement_link | default "#" }}">查看详情 →</a>
+</div>
+{{ end }}
+
+{{ $pages := .Site.RegularPages.ByDate.Reverse }}
+{{ $featured := where $pages "Params.featured" true | first 1 }}
+{{ if not $featured }}{{ $featured = $pages | first 1 }}{{ end }}
+{{ $heroMainPage := index $featured 0 }}
+{{ $rest := where $pages "RelPermalink" "!=" $heroMainPage.RelPermalink }}
+{{ $heroSide := $rest | first 3 }}
+{{ $grid := $rest | after 3 | first (.Site.Params.homeGridCount | default 6) }}
+{{ $editors := where $pages "Params.editors_pick" true }}
+{{ if not $editors }}{{ $editors = $rest | first 4 }}{{ end }}
+
+<section class="hero">
+  {{ range $featured }}{{ partial "hero-main.html" . }}{{ end }}
+  <div class="hero-side">
+    {{ range $heroSide }}{{ partial "hero-side.html" . }}{{ end }}
+  </div>
+</section>
+
+<div class="section-h"><h2>最新文章</h2><a href="{{ "/posts/" | relURL }}">查看全部 →</a></div>
+<div class="grid">
+  {{ range $grid }}{{ partial "post-card.html" . }}{{ end }}
+</div>
+
+<div class="editors">
+  <div class="eh"><h2>编辑精选</h2><span>本周值得收藏的 {{ len $editors }} 篇</span></div>
+  <div class="erow">
+    {{ $n := 0 }}
+    {{ range $editors }}
+      {{ $n = add $n 1 }}
+      {{ partial "editor-card.html" (dict "page" . "num" (printf "%02d" $n)) }}
+    {{ end }}
+  </div>
+</div>
+{{ end }}
