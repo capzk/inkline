@@ -44,7 +44,7 @@ Inkline 由静态 HTML 主题 demo `16-modern-magazine` 转换而来，CSS 与�
 
 ### 1. 安装主题
 
-**方式一：Git 子模块（推荐，也是本仓库自身使用的方式）**
+**方式一：Git 子模块（推荐）**
 
 ```bash
 cd your-site

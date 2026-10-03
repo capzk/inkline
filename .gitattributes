@@ -1,5 +1,7 @@
-# 统一换行符，避免 Windows / macOS / Linux 之间的无意义 diff
-* text=auto eol=lf
+# 换行符：仓库内一律存 LF，工作区各平台自行决定
+# （只写 text=auto，不要写 eol=lf —— 强制 eol=lf 会和 Windows 的
+#  core.autocrlf=true 打架，导致每次同步都刷出一堆只有换行符差异的"已修改"）
+* text=auto
 
 # 二进制文件不做换行转换
 *.png binary
