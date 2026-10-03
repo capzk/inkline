@@ -629,7 +629,7 @@ inkline/
 | --- | --- | --- |
 | `layouts/` | 模板。站点同路径文件会覆盖主题同名文件，改版式时优先在站点侧覆盖，不要直接改主题 | ✅ |
 | `assets/` | 需要 Hugo Pipes 处理的资源（这里放了 CSS 与搜索 JS，构建时压缩 + 指纹化） | — |
-| `static/` | 原样拷贝到发布根目录的文件 | — |
+| `static/` | 原样拷贝到发布根目录的文件（favicon、PWA 图标、`site.webmanifest`、默认分享图） | — |
 | `archetypes/` | `hugo new` 的 front matter 模板 | — |
 | `exampleSite/` | 可运行的演示站点，也是主题的活文档与回归验证环境 | 强烈建议 |
 | `images/` | 主题展示图，提交 themes.gohugo.io 时需要 | 提交展示时必需 |
@@ -675,6 +675,20 @@ A：多半是子模块没拉下来。本地执行 `git submodule update --init -
 
 **Q：想保留自己的定制，又不想每次升级都冲突？**
 A：不要直接改 `themes/inkline/` 下的文件。把要改的文件按**相同相对路径**复制到站点根目录的 `layouts/`、`assets/`、`static/` 下，Hugo 会优先用站点侧版本。这样 `git submodule update --remote` 就能放心执行。
+
+**Q：怎么换成自己的 favicon、PWA 名称和默认分享图？**
+A：主题自带的品牌资源都是**通用占位**——`static/site.webmanifest` 里的站点名是 `Inkline`，`static/images/og-default.png` 是默认分享图。换成自己的，只需在**站点根目录**放同名文件覆盖即可，不要改主题：
+
+```
+your-site/static/site.webmanifest        # PWA 名称、图标、主题色
+your-site/static/favicon.svg             # 矢量图标（现代浏览器优先用）
+your-site/static/favicon-32x32.png
+your-site/static/favicon-16x16.png
+your-site/static/apple-touch-icon.png    # iOS 添加到主屏
+your-site/static/images/og-default.png   # 默认社交分享图（1200×630）
+```
+
+注意 `static/` 下的文件是**原样拷贝**、不经过模板渲染，所以站点名要直接写死在你自己的 manifest 里，没有变量可用。分享图路径由 `params.seo.og_image` 指定，换了位置记得同步改配置。
 
 ## 许可证
 
