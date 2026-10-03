@@ -1,0 +1,208 @@
+# Inkline theme strings — English
+#
+# To add a language: copy zh-cn.toml (the reference file) under a new
+# <language-key>.toml and translate the values.
+#
+# The file name must match the language key Hugo resolves to:
+#   - single-language site: the key comes from the site's `locale` setting
+#     (locale = 'en' or 'en-US' → en.toml; matching is case-insensitive)
+#   - multi-language site: the key comes from [languages.<key>] → i18n/<key>.toml
+# If no file matches, strings render as EMPTY (Hugo logs MISSING_TRANSLATION);
+# the page silently loses its labels instead of erroring, so always ship a pack.
+#
+# One syntax note: placeholders use go-i18n v2 syntax with double braces
+# ({{ .Count }}, {{ .Name }}). Single braces such as {shown} are left untouched
+# on purpose — they are substituted by the search script (see searchStatus*).
+
+# ---------- Chrome / navigation ----------
+[skipToContent]
+other = "Skip to content"
+
+[mainNavigation]
+other = "Main navigation"
+
+[navHome]
+other = "Home"
+
+[navPosts]
+other = "Posts"
+
+[navCategories]
+other = "Categories"
+
+[navTags]
+other = "Tags"
+
+[navAbout]
+other = "About"
+
+[navSubscribe]
+other = "Subscribe"
+
+[searchTitle]
+other = "Search"
+
+[searchTitleHint]
+other = "Search this site (/)"
+
+# ---------- Home ----------
+[announcement]
+other = "Announcement"
+
+[viewDetails]
+other = "View details"
+
+[latestPosts]
+other = "Latest posts"
+
+[viewAll]
+other = "View all"
+
+[editorsPicks]
+other = "Editor's picks"
+
+[editorsPicksCount]
+other = "{{ .Count }} worth bookmarking this week"
+
+# ---------- Lists / taxonomies ----------
+[postsCount]
+other = "{{ .Count }} posts"
+
+[termsCount]
+other = "{{ .Count }} items"
+
+[taxonomyCategory]
+other = "Categories"
+
+[taxonomyTag]
+other = "Tags"
+
+# ---------- Article page ----------
+[breadcrumb]
+other = "Breadcrumb"
+
+[readingTime]
+other = "{{ .Count }} min read"
+
+[readingTimeShort]
+other = "{{ .Count }} min"
+
+[wordCount]
+other = "about {{ .Count }} words"
+
+[tagsLabel]
+other = "Tags"
+
+[copyrightTitle]
+other = "Copyright"
+
+[copyrightText]
+other = "Written by <b>{{ .Author }}</b>, first published on {{ .Site }}. Original content is licensed under <b>Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)</b>. Reposting requires keeping the author, the original link, and this notice."
+
+[authorBio]
+other = "Written by {{ .Name }}"
+
+[aboutAuthor]
+other = "About the author"
+
+[relatedPosts]
+other = "Related posts"
+
+[prevPost]
+other = "← Previous"
+
+[nextPost]
+other = "Next →"
+
+[backHome]
+other = "← Back home"
+
+[postNavigation]
+other = "Post navigation"
+
+# Fallback category name when a page has none (also the cover-gradient fallback key)
+[defaultCategory]
+other = "General"
+
+# ---------- 404 ----------
+[notFoundTitle]
+other = "Page not found"
+
+[notFoundDescription]
+other = "The page you requested does not exist, or it has moved. Head back home to keep reading."
+
+[browseAllPosts]
+other = "Browse all posts"
+
+# ---------- Pagination ----------
+[previousPage]
+other = "Previous page"
+
+[nextPage]
+other = "Next page"
+
+# ---------- Search page ----------
+[searchPlaceholder]
+other = "Type keywords, Chinese or English"
+
+[searchKeywordLabel]
+other = "Search keywords"
+
+[searchClearLabel]
+other = "Clear keywords"
+
+[searchHintTitle]
+other = "Start typing to search"
+
+[searchHintBody]
+other = "Chinese matches by word, no need to be exact; English ignores case and supports prefixes."
+
+[searchHintKeys]
+other = "Press <kbd class=\"skbd\">/</kbd> or <kbd class=\"skbd\">Ctrl</kbd>+<kbd class=\"skbd\">K</kbd> to focus the field, <kbd class=\"skbd\">↓</kbd> to move through results."
+
+[searchNoResult]
+other = "No matching content"
+
+[searchNoResultHint]
+other = "Try different wording, fewer characters, or just the key term."
+
+[searchNoJsTitle]
+other = "JavaScript required"
+
+[searchNoJsBody]
+other = "Full-text search runs locally in your browser; your query is never sent to any server."
+
+# ---------- Strings consumed by JS ({name} placeholders are substituted in JS) ----------
+[searchLoading]
+other = "Searching…"
+
+[searchStatusAll]
+other = "{total} results"
+
+[searchStatusPartial]
+other = "Showing the first {shown} of {total} results"
+
+[searchErrorTitle]
+other = "Failed to load the search index"
+
+[searchErrorBody]
+other = "Make sure the site enables the SearchIndex output format, then refresh."
+
+[codeCopy]
+other = "Copy"
+
+[codeCopied]
+other = "Copied"
+
+[codeCopyLabel]
+other = "Copy code"
+
+[codeExpand]
+other = "Expand"
+
+[codeCollapse]
+other = "Collapse"
+
+# ---------- Date format (a Go time layout, not prose) ----------
+[dateFormat]
+other = "January 2, 2006"

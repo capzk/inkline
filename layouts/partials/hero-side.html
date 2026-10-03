@@ -1,4 +1,4 @@
-{{ $cat := "科技" }}{{ with .Params.categories }}{{ $cat = index . 0 }}{{ end }}
+{{ $cat := T "defaultCategory" }}{{ with .Params.categories }}{{ $cat = index . 0 }}{{ end }}
 <a href="{{ .RelPermalink }}" class="hero-sm">
   <span class="bar" aria-hidden="true" style="{{ printf "background:%s" (partial "cover-gradient.html" $cat) | safeCSS }}"></span>
   <div class="m">{{ $cat }} · {{ .Date.Format "01·02" }}</div>

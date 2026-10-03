@@ -8,6 +8,41 @@ const escapeHtml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 /**
+ * 界面文案的内置兜底（简体中文）。
+ * 正常情况下由 baseof 的 [data-theme-i18n] 注入，这里只是保证脚本被单独引用
+ * 或跑单测时依旧可用。{shown} / {total} 由脚本自己替换。
+ */
+const FALLBACK_I18N = {
+  searchLoading: '检索中…',
+  searchStatusAll: '共 {total} 条结果',
+  searchStatusPartial: '显示前 {shown} 条，共 {total} 条结果',
+  searchNoResult: '没有找到相关内容',
+  searchNoResultHint: '换个说法、少用几个字，或只保留关键词再试一次。',
+  searchErrorTitle: '索引加载失败',
+  searchErrorBody: '请确认站点已启用 SearchIndex 输出格式，然后刷新重试。',
+};
+
+/** 合并兜底与模板注入的文案；后者优先。 */
+function resolveI18n(scope) {
+  const out = Object.assign({}, FALLBACK_I18N);
+  const node = (scope && scope.querySelector && scope.querySelector('[data-search-i18n]'))
+    || document.querySelector('[data-theme-i18n]');
+  if (node) {
+    try {
+      Object.assign(out, JSON.parse(node.textContent) || {});
+    } catch (err) {
+      // 注入内容损坏时静默退回兜底，不影响检索本身
+    }
+  }
+  return out;
+}
+
+const fill = (tpl, vars) => Object.keys(vars).reduce(
+  (acc, k) => acc.split('{' + k + '}').join(String(vars[k])),
+  String(tpl),
+);
+
+/**
  * 先按关键词切分原文、逐段转义再拼装标记，
  * 避免「先转义后匹配」把 &amp; 之类的实体内容误标成命中。
  */
@@ -62,6 +97,7 @@ export function mount(root, loadIndex) {
   const empty = root.querySelector('[data-search-empty]');
   if (!input || !list) return;
 
+  const i18n = resolveI18n(root);
   const indexUrl = root.getAttribute('data-search-index') || '/searchindex.json';
   let timer = 0;
   let seq = 0;
@@ -72,6 +108,20 @@ export function mount(root, loadIndex) {
     list.hidden = name !== 'results';
   };
 
+  const showEmpty = (title, message, term) => {
+    list.innerHTML = '';
+    list.hidden = true;
+    if (hint) hint.hidden = true;
+    if (!empty) return;
+    empty.hidden = false;
+    const t = empty.querySelector('[data-search-title]');
+    const m = empty.querySelector('[data-search-message]');
+    const q = empty.querySelector('[data-search-term]');
+    if (t) t.textContent = title;
+    if (m) m.textContent = message;
+    if (q) q.textContent = term || '';
+  };
+
   const idle = () => {
     list.innerHTML = '';
     if (status) status.textContent = '';
@@ -79,37 +129,10 @@ export function mount(root, loadIndex) {
     panel('hint');
   };
 
-  const errorPanel = (title, message) => {
-    list.innerHTML = '';
-    list.hidden = true;
-    if (hint) hint.hidden = true;
-    if (empty) {
-      empty.hidden = false;
-      const t = empty.querySelector('[data-search-title]');
-      const m = empty.querySelector('[data-search-message]');
-      const q = empty.querySelector('[data-search-term]');
-      if (t) t.textContent = title;
-      if (m) m.textContent = message;
-      if (q) q.textContent = '';
-    }
-    if (status) status.textContent = '';
-  };
-
   const render = (result, query) => {
     const needles = marks(result);
     if (!result.hits.length) {
-      list.innerHTML = '';
-      list.hidden = true;
-      if (hint) hint.hidden = true;
-      if (empty) {
-        empty.hidden = false;
-        const t = empty.querySelector('[data-search-title]');
-        const m = empty.querySelector('[data-search-message]');
-        const q = empty.querySelector('[data-search-term]');
-        if (t) t.textContent = '没有找到相关内容';
-        if (m) m.textContent = '换个说法、少用几个字，或只保留关键词再试一次。';
-        if (q) q.textContent = query;
-      }
+      showEmpty(i18n.searchNoResult, i18n.searchNoResultHint, query);
       if (status) status.textContent = '';
       return;
     }
@@ -117,8 +140,8 @@ export function mount(root, loadIndex) {
     panel('results');
     if (status) {
       status.textContent = result.total > result.hits.length
-        ? '显示前 ' + result.hits.length + ' 条，共 ' + result.total + ' 条结果'
-        : '共 ' + result.total + ' 条结果';
+        ? fill(i18n.searchStatusPartial, { shown: result.hits.length, total: result.total })
+        : fill(i18n.searchStatusAll, { total: result.total });
     }
   };
 
@@ -134,13 +157,13 @@ export function mount(root, loadIndex) {
       return;
     }
     if (clear) clear.hidden = false;
-    if (status) status.textContent = '检索中…';
+    if (status) status.textContent = i18n.searchLoading;
     panel('results');
     let docs;
     try {
       docs = await loadIndex(indexUrl);
     } catch (err) {
-      if (mine === seq) errorPanel('索引加载失败', '请确认站点已启用 SearchIndex 输出格式，然后刷新重试。');
+      if (mine === seq) showEmpty(i18n.searchErrorTitle, i18n.searchErrorBody, '');
       return;
     }
     if (mine !== seq) return;

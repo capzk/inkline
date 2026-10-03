@@ -1,7 +1,7 @@
 {{ if gt .Paginator.TotalPages 1 }}
 <nav class="pagination">
   {{ if .Paginator.HasPrev }}
-    <a href="{{ .Paginator.Prev.URL }}" aria-label="上一页">‹</a>
+    <a href="{{ .Paginator.Prev.URL }}" aria-label="{{ T "previousPage" }}">‹</a>
   {{ end }}
   {{ range .Paginator.Pagers }}
     {{ if eq . $ }}
@@ -11,7 +11,7 @@
     {{ end }}
   {{ end }}
   {{ if .Paginator.HasNext }}
-    <a href="{{ .Paginator.Next.URL }}" aria-label="下一页">›</a>
+    <a href="{{ .Paginator.Next.URL }}" aria-label="{{ T "nextPage" }}">›</a>
   {{ end }}
 </nav>
 {{ end }}

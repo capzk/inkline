@@ -1,0 +1,210 @@
+# Inkline 主题界面文案 —— 简体中文
+#
+# 新增语言：复制本文件为 <语言代码>.toml（如 en.toml、zh-tw.toml）再翻译。
+#
+# 语言包按「语言键」选取，文件名必须是 i18n/<语言键>.toml：
+#   - 单语言站点：语言键取自站点 config 的 locale
+#     （本站 locale = 'zh-CN' → 命中 zh-cn.toml，实测大小写不敏感）
+#   - 多语言站点：语言键取自 [languages.<键>]，即 i18n/<键>.toml
+# 若站点 locale 找不到对应文件，文案会被渲染成空字符串（构建日志出现
+# MISSING_TRANSLATION），页面会「丢字」而不是报错，务必记得建包。
+#
+# 两条语法提醒：
+#   1. 占位符是 go-i18n v2 语法，用双花括号：{{ .Count }}、{{ .Name }}。
+#      单花括号（如 {shown}）不会被渲染，是留给 JS 自己替换的，见 searchStatus* 三项。
+#
+# 计数类调用方式：{{ T "readingTime" .ReadingTime }} → 填充 {{ .Count }}
+# 多参数调用方式：{{ T "copyrightText" (dict "Author" $a "Site" $s) }}
+
+# ---------- 通用 / 导航 ----------
+[skipToContent]
+other = "跳到正文"
+
+[mainNavigation]
+other = "主导航"
+
+[navHome]
+other = "首页"
+
+[navPosts]
+other = "文章"
+
+[navCategories]
+other = "分类"
+
+[navTags]
+other = "标签"
+
+[navAbout]
+other = "关于"
+
+[navSubscribe]
+other = "订阅"
+
+[searchTitle]
+other = "站内搜索"
+
+[searchTitleHint]
+other = "站内搜索（/）"
+
+# ---------- 首页 ----------
+[announcement]
+other = "公告"
+
+[viewDetails]
+other = "查看详情"
+
+[latestPosts]
+other = "最新文章"
+
+[viewAll]
+other = "查看全部"
+
+[editorsPicks]
+other = "编辑精选"
+
+[editorsPicksCount]
+other = "本周值得收藏的 {{ .Count }} 篇"
+
+# ---------- 列表 / 分类法 ----------
+[postsCount]
+other = "{{ .Count }} 篇"
+
+[termsCount]
+other = "{{ .Count }} 个"
+
+[taxonomyCategory]
+other = "分类"
+
+[taxonomyTag]
+other = "标签"
+
+# ---------- 文章页 ----------
+[breadcrumb]
+other = "面包屑"
+
+[readingTime]
+other = "阅读 {{ .Count }} 分钟"
+
+[readingTimeShort]
+other = "{{ .Count }} min"
+
+[wordCount]
+other = "约 {{ .Count }} 字"
+
+[tagsLabel]
+other = "标签"
+
+[copyrightTitle]
+other = "版权声明"
+
+[copyrightText]
+other = "本文作者 <b>{{ .Author }}</b>，首发于「{{ .Site }}」。本站原创内容采用 <b>知识共享 署名-非商业性使用 4.0 (CC BY-NC 4.0)</b> 协议。转载须保留作者、原文链接与本声明。"
+
+[authorBio]
+other = "{{ .Name }} 的主笔"
+
+[aboutAuthor]
+other = "关于作者"
+
+[relatedPosts]
+other = "相关阅读"
+
+[prevPost]
+other = "← 上一篇"
+
+[nextPost]
+other = "下一篇 →"
+
+[backHome]
+other = "← 返回首页"
+
+[postNavigation]
+other = "上下篇导航"
+
+# 文章没写分类时的兜底名称（同时作为封面渐变的兜底 key）
+[defaultCategory]
+other = "科技"
+
+# ---------- 404 ----------
+[notFoundTitle]
+other = "页面走失了"
+
+[notFoundDescription]
+other = "你访问的页面不存在，或者已被移动。不妨回到首页继续浏览最新文章。"
+
+[browseAllPosts]
+other = "浏览全部文章"
+
+# ---------- 分页 ----------
+[previousPage]
+other = "上一页"
+
+[nextPage]
+other = "下一页"
+
+# ---------- 搜索页 ----------
+[searchPlaceholder]
+other = "输入关键词，中英文都可以"
+
+[searchKeywordLabel]
+other = "搜索关键词"
+
+[searchClearLabel]
+other = "清空关键词"
+
+[searchHintTitle]
+other = "输入关键词开始检索"
+
+[searchHintBody]
+other = "中文按词匹配，不必逐字精确；英文忽略大小写，支持前缀。"
+
+[searchHintKeys]
+other = "按 <kbd class=\"skbd\">/</kbd> 或 <kbd class=\"skbd\">Ctrl</kbd>+<kbd class=\"skbd\">K</kbd> 聚焦输入框，<kbd class=\"skbd\">↓</kbd> 切换结果。"
+
+[searchNoResult]
+other = "没有找到相关内容"
+
+[searchNoResultHint]
+other = "换个说法、少用几个字，或只保留关键词再试一次。"
+
+[searchNoJsTitle]
+other = "需要开启 JavaScript"
+
+[searchNoJsBody]
+other = "全文检索在浏览器本地完成，检索词不会发送到任何服务器。"
+
+# ---------- 供 JS 使用的文案（单花括号占位符由脚本替换） ----------
+[searchLoading]
+other = "检索中…"
+
+[searchStatusAll]
+other = "共 {total} 条结果"
+
+[searchStatusPartial]
+other = "显示前 {shown} 条，共 {total} 条结果"
+
+[searchErrorTitle]
+other = "索引加载失败"
+
+[searchErrorBody]
+other = "请确认站点已启用 SearchIndex 输出格式，然后刷新重试。"
+
+[codeCopy]
+other = "复制"
+
+[codeCopied]
+other = "已复制"
+
+[codeCopyLabel]
+other = "复制代码"
+
+[codeExpand]
+other = "展开"
+
+[codeCollapse]
+other = "收起"
+
+# ---------- 日期格式（Go 时间布局，不是文案） ----------
+[dateFormat]
+other = "2006 年 1 月 2 日"

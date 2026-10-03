@@ -1,6 +1,9 @@
 # Inkline 主题示例站点配置（exampleSite）
 # 直接 `hugo server --source exampleSite --themesDir ../..` 即可预览整套主题效果。
 baseURL = 'https://example.org/'
+# locale 决定 i18n 语言包的文件名（zh-CN → i18n/zh-cn.toml）。
+# 主题自带 zh-cn 与 en 两份语言包；换成别的 locale 必须自己补一份，
+# 否则界面文案会被渲染成空字符串（构建日志出现 MISSING_TRANSLATION），页面会「丢字」。
 locale = 'zh-CN'
 title = '引线'
 theme = 'inkline'
@@ -78,3 +81,22 @@ enableRobotsTXT = true
     noClasses = true
     codeFences = true
     lineNos = false
+
+# ---------------------------------------------------------------------------
+# 多语言：取消注释即可得到中英双语站点（会额外产出 /en/ 目录）
+#
+# 规则：语言键决定语言包文件名 —— [languages.en] 取 i18n/en.toml。
+# 内容侧：把 xxx.md 复制成 xxx.en.md 就是该文章的英文版。
+# 想只改个别文案，不必 fork 主题：在站点根目录建 i18n/<语言键>.toml，
+# 同名 key 会覆盖主题自带的翻译。
+#
+# defaultContentLanguage = 'zh-cn'
+# [languages]
+#   [languages.zh-cn]
+#     locale = 'zh-CN'
+#     title = '引线'
+#     weight = 1
+#   [languages.en]
+#     locale = 'en'
+#     title = 'Inkline'
+#     weight = 2

@@ -1,7 +1,10 @@
 {{ define "main" }}
+{{/* 分类法总览页（/categories/、/tags/）：标题跟随分类法名称，便于多语言 */}}
+{{ $heading := .Title }}
+{{ if eq .Data.Singular "category" }}{{ $heading = T "taxonomyCategory" }}{{ else if eq .Data.Singular "tag" }}{{ $heading = T "taxonomyTag" }}{{ end }}
 <div class="section-h">
-  <h2>{{ if eq .Data.Singular "category" }}分类{{ else if eq .Data.Singular "tag" }}标签{{ else }}{{ .Title }}{{ end }}</h2>
-  <span>{{ len .Pages }} 个</span>
+  <h2>{{ $heading }}</h2>
+  <span>{{ T "termsCount" (len .Pages) }}</span>
 </div>
 <div class="cats">
   {{ range .Pages }}

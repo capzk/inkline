@@ -18,17 +18,75 @@
   {{ with .Site.Params.accent.primary }}<style>:root{--accent:{{ . }};--accent-dark:color-mix(in srgb,{{ . }} 76%,#000);--accent-soft:color-mix(in srgb,{{ . }} 14%,#fff);--accent-ink:color-mix(in srgb,{{ . }} 82%,#000);--accent-deep:color-mix(in srgb,{{ . }} 72%,#000);--accent-light:color-mix(in srgb,{{ . }} 62%,#fff);--accent-pale:color-mix(in srgb,{{ . }} 78%,#fff);--accent-link:color-mix(in srgb,{{ . }} 55%,#fff);--accent-av:linear-gradient(135deg,{{ . }},color-mix(in srgb,{{ . }} 55%,#fff));}</style>{{ end }}
   {{/* 页面级按需资源（如搜索页的检索脚本），避免在其他页面加载 */}}
   {{ block "head" . }}{{ end }}
+  {{/* 脚本要用到的文案统一在这里注入，避免把某种语言的界面文案写死在 .js 里。
+       单花括号占位符（如 {total}）是故意的：go-i18n 不会动它，由脚本自己替换。
+       jsonify 会把 < > & 转成 \uXXXX，所以不可能出现 </script> 注入问题。 */}}
+  <script type="application/json" data-theme-i18n>{{ dict
+    "codeCopy" (T "codeCopy")
+    "codeCopied" (T "codeCopied")
+    "codeCopyLabel" (T "codeCopyLabel")
+    "codeExpand" (T "codeExpand")
+    "codeCollapse" (T "codeCollapse")
+    "searchLoading" (T "searchLoading")
+    "searchStatusAll" (T "searchStatusAll")
+    "searchStatusPartial" (T "searchStatusPartial")
+    "searchNoResult" (T "searchNoResult")
+    "searchNoResultHint" (T "searchNoResultHint")
+    "searchErrorTitle" (T "searchErrorTitle")
+    "searchErrorBody" (T "searchErrorBody")
+  | jsonify | safeJS }}</script>
   {{ with .Site.Params.seo.google_analytics }}<script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','{{ . }}');</script>{{ end }}
 </head>
 <body>
-<a class="skip" href="#main">跳到正文</a>
+<a class="skip" href="#main">{{ T "skipToContent" }}</a>
 {{ partial "header.html" . }}
 <main id="main" class="wrap">
 {{ block "main" . }}{{ end }}
 </main>
 {{ partial "footer.html" . }}
 <script>
-document.querySelectorAll('article pre').forEach(function(pre){var code=pre.querySelector('code');var btn=document.createElement('button');btn.className='copy-btn';btn.textContent='复制';btn.setAttribute('aria-label','复制代码');btn.addEventListener('click',function(){var text=code?code.textContent:pre.textContent;navigator.clipboard.writeText(text).then(function(){btn.textContent='已复制';btn.classList.add('copied');setTimeout(function(){btn.textContent='复制';btn.classList.remove('copied');},2000);}).catch(function(){});});pre.appendChild(btn);if(pre.scrollHeight>320){pre.classList.add('collapsible');var ex=document.createElement('button');ex.className='expand-btn';ex.textContent='展开';ex.addEventListener('click',function(){if(pre.classList.contains('expanded')){pre.classList.remove('expanded');ex.textContent='展开';}else{pre.classList.add('expanded');ex.textContent='收起';}});pre.appendChild(ex);}});
+(function () {
+  var I18N = {};
+  try {
+    var el = document.querySelector('[data-theme-i18n]');
+    if (el) I18N = JSON.parse(el.textContent) || {};
+  } catch (e) { I18N = {}; }
+  // 取不到翻译时退回内置中文，保证脚本脱离模板也能工作（便于单测）
+  var t = function (key, fallback) { return I18N[key] || fallback; };
+
+  document.querySelectorAll('article pre').forEach(function (pre) {
+    var code = pre.querySelector('code');
+    var btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = t('codeCopy', '复制');
+    btn.setAttribute('aria-label', t('codeCopyLabel', '复制代码'));
+    btn.addEventListener('click', function () {
+      var text = code ? code.textContent : pre.textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = t('codeCopied', '已复制');
+        btn.classList.add('copied');
+        setTimeout(function () { btn.textContent = t('codeCopy', '复制'); btn.classList.remove('copied'); }, 2000);
+      }).catch(function () {});
+    });
+    pre.appendChild(btn);
+    if (pre.scrollHeight > 320) {
+      pre.classList.add('collapsible');
+      var ex = document.createElement('button');
+      ex.className = 'expand-btn';
+      ex.textContent = t('codeExpand', '展开');
+      ex.addEventListener('click', function () {
+        if (pre.classList.contains('expanded')) {
+          pre.classList.remove('expanded');
+          ex.textContent = t('codeExpand', '展开');
+        } else {
+          pre.classList.add('expanded');
+          ex.textContent = t('codeCollapse', '收起');
+        }
+      });
+      pre.appendChild(ex);
+    }
+  });
+})();
 </script>
 </body>
 </html>

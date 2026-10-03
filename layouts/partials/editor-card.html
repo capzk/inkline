@@ -1,9 +1,9 @@
 {{ $page := .page }}
-{{ $cat := "科技" }}{{ with $page.Params.categories }}{{ $cat = index . 0 }}{{ end }}
+{{ $cat := T "defaultCategory" }}{{ with $page.Params.categories }}{{ $cat = index . 0 }}{{ end }}
 <a class="ecard" href="{{ $page.RelPermalink }}">
   <span class="n">{{ .num }}</span>
   <div>
-    <div class="m">{{ $cat }} · {{ $page.ReadingTime }} min</div>
+    <div class="m">{{ $cat }} · {{ T "readingTimeShort" $page.ReadingTime }}</div>
     <h4>{{ $page.Title }}</h4>
   </div>
 </a>

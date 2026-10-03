@@ -1,9 +1,9 @@
 {{ define "main" }}
 {{ with .Site.Params.announcement }}
 <div class="announce">
-  <span class="tag">公告</span>
+  <span class="tag">{{ T "announcement" }}</span>
   <p>{{ . }}</p>
-  <a href="{{ $.Site.Params.announcement_link | default "#" }}">查看详情 →</a>
+  <a href="{{ $.Site.Params.announcement_link | default "#" }}">{{ T "viewDetails" }} →</a>
 </div>
 {{ end }}
 
@@ -24,13 +24,13 @@
   </div>
 </section>
 
-<div class="section-h"><h2>最新文章</h2><a href="{{ "/posts/" | relURL }}">查看全部 →</a></div>
+<div class="section-h"><h2>{{ T "latestPosts" }}</h2><a href="{{ "/posts/" | relURL }}">{{ T "viewAll" }} →</a></div>
 <div class="grid">
   {{ range $grid }}{{ partial "post-card.html" . }}{{ end }}
 </div>
 
 <div class="editors">
-  <div class="eh"><h2>编辑精选</h2><span>本周值得收藏的 {{ len $editors }} 篇</span></div>
+  <div class="eh"><h2>{{ T "editorsPicks" }}</h2><span>{{ T "editorsPicksCount" (len $editors) }}</span></div>
   <div class="erow">
     {{ $n := 0 }}
     {{ range $editors }}

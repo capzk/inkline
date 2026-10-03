@@ -35,7 +35,7 @@ Inkline 由静态 HTML 主题 demo `16-modern-magazine` 转换而来，CSS 与�
 - 🔗 永久链接可定制（默认 `/posts/:slug/`，支持 `slug` / `url` / `aliases`）
 - 🔎 **中文友好的站内搜索**：Hugo 构建期生成索引，前端零依赖零请求第三方，中文按二元切分，词序无关也能命中
 - 🔍 完整 SEO：canonical、keywords、Open Graph、Twitter Card、JSON-LD 结构化数据、RSS、sitemap、favicon、theme-color
-- 🌐 中文本地化：`hasCJKLanguage`、`enableEmoji`、代码高亮、脚注、定义列表
+- 🌐 **完整 i18n**：界面文案全部走 Hugo 的 `i18n`，模板与脚本里零硬编码；自带 `zh-cn` / `en` 两份语言包，新增语言只需复制一份 toml
 - 📱 响应式：桌面 3 列、平板 2 列、手机 1 列
 - ♿ 语义化标签 + 键盘可达
 - 📄 自定义 404 页面 + 干净的数字分页
@@ -71,7 +71,7 @@ theme = "github.com/capzk/inkline"
 
 **方式三：直接复制**
 
-把本仓库的 `archetypes/`、`assets/`、`layouts/`、`static/` 复制到你的站点 `themes/inkline/` 下。缺点是后续无法平滑跟进上游更新。
+把本仓库的 `archetypes/`、`assets/`、`i18n/`、`layouts/`、`static/` 复制到你的站点 `themes/inkline/` 下。缺点是后续无法平滑跟进上游更新。
 
 ### 2. 启用主题
 
@@ -408,6 +408,82 @@ sitemap:
 - **索引字段**：编辑 `layouts/index.searchindex.json`（单字母字段名是为了压体积）
 - **分词与排序**：`assets/js/search/` 下按职责拆分——`tokenize.js`（分词归一）、`engine.js`（打分排序）、`ui.js`（渲染交互）、`main.js`（入口）。这几个模块都不依赖 DOM，可以单独在 Node 里跑测试或替换
 
+## 多语言（i18n）
+
+导航、文章页的「阅读 N 分钟 / 版权声明 / 相关阅读」、搜索页提示、代码块的「复制 / 展开」等界面文案，**全部**通过 Hugo 的 `i18n` 提供，模板和检索脚本里没有任何硬编码文案。主题自带两份语言包：
+
+| 文件 | 语言 |
+| --- | --- |
+| `i18n/zh-cn.toml` | 简体中文（基准，61 个 key，最全） |
+| `i18n/en.toml` | English |
+
+### 语言包是怎么被选中的
+
+文件名必须等于 Hugo 解析出的**语言键**：
+
+| 站点形态 | 语言键来源 | 实际读取 |
+| --- | --- | --- |
+| 单语言（只写 `locale`） | 站点 `locale` | `locale = 'zh-CN'` → `i18n/zh-cn.toml` |
+| 多语言（写了 `[languages]`） | `[languages.<键>]` 的键 | `[languages.en]` → `i18n/en.toml` |
+
+> ⚠️ 找不到对应文件时 Hugo **不会中断构建**，而是把文案渲染成空字符串（日志里只有一条 `MISSING_TRANSLATION`）。所以换 `locale` 时务必确认存在同名语言包，否则页面会静默「丢字」。
+
+### 新增一种语言
+
+```bash
+cp themes/inkline/i18n/zh-cn.toml your-site/i18n/ja.toml
+```
+
+然后逐条翻译 `other`。计数类文案用 go-i18n 的占位符语法：
+
+```toml
+[readingTime]
+other = "読了時間 {{ .Count }} 分"
+```
+
+> 注意是**双花括号**。`searchStatusAll` / `searchStatusPartial` 里的 `{shown}`、`{total}` 是**单**花括号，由检索脚本自己替换，不要改。
+
+### 只改个别文案（不必 fork 主题）
+
+在站点根目录建 `i18n/<语言键>.toml`，只写要覆盖的 key，同名 key 会盖掉主题的翻译，其余继续走主题。比如只把「文章」改成「笔记」：
+
+```toml
+# your-site/i18n/zh-cn.toml
+[navPosts]
+other = "笔记"
+```
+
+### 把界面换成英文
+
+单语言站点改一处即可：`locale = 'en'`。多语言站点见下。
+
+### 日期格式
+
+日期也走 i18n，值是 Go 的时间布局：
+
+```toml
+[dateFormat]
+other = "2006 年 1 月 2 日"   # 英文包为 January 2, 2006
+```
+
+### 多语言站点
+
+```toml
+defaultContentLanguage = 'zh-cn'
+
+[languages]
+  [languages.zh-cn]
+    locale = 'zh-CN'
+    title = '我的博客'
+    weight = 1
+  [languages.en]
+    locale = 'en'
+    title = 'My Blog'
+    weight = 2
+```
+
+内容侧把 `xxx.md` 复制为 `xxx.en.md` 即得该文的英文版，主题会自动产出 `/en/` 目录。导航、面包屑、标签、搜索页文案、结果计数、404 会整体跟随语言切换。`exampleSite/hugo.toml` 末尾有可直接取消注释的现成模板。
+
 ## SEO 说明
 
 主题已在 `<head>` 输出以下标签（无需额外配置）：
@@ -509,6 +585,9 @@ inkline/
 │       ├── engine.js         # 打分排序、摘要截取、索引加载
 │       ├── ui.js             # 结果渲染、高亮、键盘导航
 │       └── main.js           # 入口
+├── i18n/
+│   ├── zh-cn.toml            # 简体中文语言包（基准，key 最全）
+│   └── en.toml               # English
 ├── layouts/
 │   ├── _default/
 │   │   ├── baseof.html       # 基础模板（含 head 注入块与代码复制 JS）
@@ -554,7 +633,7 @@ inkline/
 | `archetypes/` | `hugo new` 的 front matter 模板 | — |
 | `exampleSite/` | 可运行的演示站点，也是主题的活文档与回归验证环境 | 强烈建议 |
 | `images/` | 主题展示图，提交 themes.gohugo.io 时需要 | 提交展示时必需 |
-| `i18n/` | 多语言文案。本主题全部为中文硬编码，未使用 | — |
+| `i18n/` | 界面文案语言包（`zh-cn` / `en`）。模板与脚本里没有硬编码文案，换语言只需加一份 toml | — |
 
 ## 常见问题
 
@@ -578,6 +657,15 @@ A：确认 `hugo.toml` 里有 `[outputs] home = ['HTML', 'RSS', 'SearchIndex']` 
 
 **Q：搜索支持其他语言吗？**
 A：分词器对中日韩统一按二元切分，对拉丁文字按单词 + 前缀匹配，日文、韩文同样适用；欧陆语言的词形变化（复数、变格）目前不做词干还原。
+
+**Q：站点起来后界面文字全空了（导航、按钮都没字）？**
+A：`locale` 没有对应的语言包。主题自带 `zh-cn` 与 `en`，如果写了别的 `locale`（如 `ja`）就要自己补一份 `i18n/ja.toml`。构建日志里会有 `MISSING_TRANSLATION`，但不会中断构建，所以很容易漏掉。
+
+**Q：怎么把界面文案换成英文？**
+A：单语言站点改 `locale = 'en'`；多语言站点用 `[languages]` 声明，详见「多语言（i18n）」一节。
+
+**Q：不想直接改主题里的文案怎么办？**
+A：在站点根目录建 `i18n/<语言键>.toml`，只写要覆盖的 key 即可，同名 key 优先于主题。这样升级主题不会冲突。
 
 **Q：构建报 `can't evaluate field Locale in type ...`？**
 A：Hugo 版本低于 0.158.0。升级即可；若在用 Cloudflare Pages，去 Settings → Variables and Secrets 把 `HUGO_VERSION` 调到 0.158.0 以上，然后 retry 部署。
