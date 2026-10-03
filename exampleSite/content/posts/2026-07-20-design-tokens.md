@@ -1,6 +1,7 @@
 ---
 title: "用设计令牌统一产品视觉"
 date: 2026-07-20
+slug: "2026-07-20-design-tokens"
 author: "引线编辑部"
 emoji: "🎨"
 categories: ["设计"]

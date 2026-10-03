@@ -1,6 +1,7 @@
 ---
 title: "静态站点生成器的工程取舍"
 date: 2026-06-15
+slug: "2026-06-15-static-site"
 author: "引线编辑部"
 emoji: "⚙️"
 categories: ["工程"]
