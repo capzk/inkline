@@ -13,7 +13,6 @@
 Inkline 由静态 HTML 主题 demo `16-modern-magazine` 转换而来，CSS 与视觉语言原样保留，仅把写死的文字替换为 Hugo 模板变量。适合技术博客、运维笔记、个人杂志类站点。
 
 - 仓库：<https://github.com/capzk/inkline>
-- 演示站：<https://capzk.com/>
 - 许可证：MIT
 
 ## 环境要求
